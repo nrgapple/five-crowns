@@ -9,7 +9,12 @@ export const play = {
     let deck = shuffle([...G.deck])
     const players = G.players.map((x) => ({
       ...x,
-      hand: new Array(G.round).fill(undefined).map((y) => deck.pop()),
+      hand: new Array(G.round).fill(undefined).map((y) => (
+        {
+          card: deck.pop(),
+          group: 0,
+        }
+      )),
     }))
     const discardedCards = [deck.pop()]
     return {

@@ -5,12 +5,10 @@ export const discardCard = (G, ctx, cardIndex) => {
   const oldPlayer = G.players[ctx.currentPlayer]
   console.log(G)
   if (!oldPlayer.hand[cardIndex]) return INVALID_MOVE
-  const discardedCard = oldPlayer.hand[cardIndex]
+  const discardedCard = oldPlayer.hand[cardIndex].card
   const discardedCards = [...G.discardedCards, discardedCard]
   const players = G.players.map((x, i) => {
     if (i === parseInt(ctx.currentPlayer)) {
-      console.log(x)
-      console.log([...x.hand].splice(cardIndex, 1))
       return {
         ...x,
         hand: x.hand.filter((y, i) => i !== cardIndex),
@@ -47,7 +45,7 @@ export const pickFromTopOfDeck = (G, ctx) => {
   const card = deck.pop()
   const players = G.players.map((x, i) => ({
     ...x,
-    hand: parseInt(ctx.currentPlayer) === i ? [...x.hand, card] : x.hand,
+    hand: parseInt(ctx.currentPlayer) === i ? [...x.hand, { card, group: 0}] : x.hand,
   }))
   ctx.events.setStage("discardCard")
   return {
@@ -63,7 +61,7 @@ export const pickFromTopOfDiscardedCard = (G, ctx) => {
   const card = discardedCards.pop()
   const players = G.players.map((x, i) => ({
     ...x,
-    hand: parseInt(ctx.currentPlayer) === i ? [...x.hand, card] : x.hand,
+    hand: parseInt(ctx.currentPlayer) === i ? [...x.hand, { card, group: 0 }] : x.hand,
   }))
   ctx.events.setStage("discardCard")
   return {
