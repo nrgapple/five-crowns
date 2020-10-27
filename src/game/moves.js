@@ -20,7 +20,7 @@ export const discardCard = (G, ctx, cardIndex) => {
   return { ...G, players, discardedCards }
 }
 
-export const goOut = (G, ctx) => {
+export const goOut = (G, ctx, group) => {
   console.log("goOut")
   const players = G.players.map((x, i) => ({
     ...x,
@@ -45,7 +45,10 @@ export const pickFromTopOfDeck = (G, ctx) => {
   const card = deck.pop()
   const players = G.players.map((x, i) => ({
     ...x,
-    hand: parseInt(ctx.currentPlayer) === i ? [...x.hand, { card, group: 0}] : x.hand,
+    hand:
+      parseInt(ctx.currentPlayer) === i
+        ? [...x.hand, { card, group: 0 }]
+        : x.hand,
   }))
   ctx.events.setStage("discardCard")
   return {
@@ -61,12 +64,50 @@ export const pickFromTopOfDiscardedCard = (G, ctx) => {
   const card = discardedCards.pop()
   const players = G.players.map((x, i) => ({
     ...x,
-    hand: parseInt(ctx.currentPlayer) === i ? [...x.hand, { card, group: 0 }] : x.hand,
+    hand:
+      parseInt(ctx.currentPlayer) === i
+        ? [...x.hand, { card, group: 0 }]
+        : x.hand,
   }))
   ctx.events.setStage("discardCard")
   return {
     ...G,
     discardedCards,
     players,
+  }
+}
+
+export const moveCardToGroup1 = (G, ctx, [ cardIndex, groupNumber ]) => {
+  console.log({cardIndex, groupNumber})
+  if (cardIndex > G.players[ctx.currentPlayer].hand.length - 1)
+    return INVALID_MOVE
+  if (groupNumber === undefined) {
+    console.log(G.players[ctx.currentPlayer].hand.map((x) => x.group))
+    const max = Math.max(...G.players[ctx.currentPlayer].hand.map((x) => x.group))
+    console.log(max)
+    return {
+      ...G,
+      players: G.players.map((x, i) => ({
+        ...x,
+        hand:
+          parseInt(ctx.currentPlayer) === i
+            ? x.hand.map((z, i) =>
+                i === cardIndex ? { ...z, group: max + 1 } : z
+              )
+            : x.hand,
+      })),
+    }
+  }
+  return {
+    ...G,
+    players: G.players.map((x, i) => ({
+      ...x,
+      hand:
+        parseInt(ctx.currentPlayer) === i
+          ? x.hand.map((z, i) =>
+              i === cardIndex ? { ...z, group: groupNumber } : z
+            )
+          : x.hand,
+    })),
   }
 }
