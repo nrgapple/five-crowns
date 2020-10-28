@@ -2,7 +2,6 @@ import cards from "./cards"
 import {
   pickFromTopOfDeck,
   pickFromTopOfDiscardedCard,
-  moveCardToGroup,
 } from "./moves"
 import { play } from "./phases/play"
 
@@ -19,7 +18,7 @@ export const fiveCrowns = {
     round: 3,
     totalRounds: 13,
   }),
-  moves: { pickFromTopOfDeck, pickFromTopOfDiscardedCard, moveCardToGroup },
+  moves: { pickFromTopOfDeck, pickFromTopOfDiscardedCard },
   phases: {
     play,
     next: {

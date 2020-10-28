@@ -255,8 +255,4 @@ export default [
     "suit": "star",
     "value": "K"
   },
-  {
-    "suit": "star",
-    "value": "X"
-  },
 ]
