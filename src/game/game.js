@@ -15,7 +15,7 @@ export const fiveCrowns = {
       score: new Array(10).fill(0),
       out: false,
     })),
-    round: 3,
+    round: 10,
     totalRounds: 13,
   }),
   moves: { pickFromTopOfDeck, pickFromTopOfDiscardedCard },

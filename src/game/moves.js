@@ -1,9 +1,9 @@
 import { INVALID_MOVE } from "boardgame.io/core"
+import { bestBookRunCombination, getValueFromInt } from "./utils"
 
 export const discardCard = (G, ctx, cardIndex) => {
   console.log("discardCard")
   const oldPlayer = G.players[ctx.currentPlayer]
-  console.log(G)
   if (!oldPlayer.hand[cardIndex]) return INVALID_MOVE
   const discardedCard = oldPlayer.hand[cardIndex].card
   const discardedCards = [...G.discardedCards, discardedCard]
@@ -22,6 +22,11 @@ export const discardCard = (G, ctx, cardIndex) => {
 
 export const goOut = (G, ctx) => {
   console.log("goOut")
+  const { hand, name } = G.players[ctx.currentPlayer]
+  const { score, bestHand } = bestBookRunCombination(hand, getValueFromInt(G.round))
+  console.log(`${name}'s score:`, score)
+  console.log(`Best hand ${JSON.stringify(bestHand)}`)
+  if (score !== 0) return INVALID_MOVE
   const players = G.players.map((x, i) => ({
     ...x,
     out: parseInt(ctx.currentPlayer) === i ? true : x.out,
@@ -45,10 +50,7 @@ export const pickFromTopOfDeck = (G, ctx) => {
   const card = deck.pop()
   const players = G.players.map((x, i) => ({
     ...x,
-    hand:
-      parseInt(ctx.currentPlayer) === i
-        ? [...x.hand, card]
-        : x.hand,
+    hand: parseInt(ctx.currentPlayer) === i ? [...x.hand, card] : x.hand,
   }))
   ctx.events.setStage("discardCard")
   return {
@@ -64,10 +66,7 @@ export const pickFromTopOfDiscardedCard = (G, ctx) => {
   const card = discardedCards.pop()
   const players = G.players.map((x, i) => ({
     ...x,
-    hand:
-      parseInt(ctx.currentPlayer) === i
-        ? [...x.hand, card]
-        : x.hand,
+    hand: parseInt(ctx.currentPlayer) === i ? [...x.hand, card] : x.hand,
   }))
   ctx.events.setStage("discardCard")
   return {

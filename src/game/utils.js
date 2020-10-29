@@ -1,3 +1,5 @@
+import cards from "./cards"
+
 export const shuffle = (array) => {
   var currentIndex = array.length,
     temporaryValue,
@@ -39,6 +41,10 @@ const isWild = (card, currentRoundValue) => {
   return card.value === "X" || card.value === currentRoundValue
 }
 
+const areCardsEqual = (cardA, cardB) => {
+  return cardA.value === cardB.value && cardA.suit === cardB.suit
+}
+
 export const getCardInt = (card) => {
   switch (card.value) {
     case "K":
@@ -55,7 +61,7 @@ export const getCardInt = (card) => {
 }
 
 export const getValueFromInt = (number) => {
-  switch (card.value) {
+  switch (number) {
     case 14:
       return "X"
     case 13:
@@ -65,7 +71,7 @@ export const getValueFromInt = (number) => {
     case 11:
       return "J"
     default:
-      return card.value
+      return number
   }
 }
 
@@ -103,7 +109,7 @@ const getNumberOfMissingCards = (sortedHand) => {
   return numberOfMiddle > 0 ? max - min - 1 - sortedHand - 2 : 0
 }
 
-export const checkBook = (hand, currentRoundValue) => {
+const checkBook = (hand, currentRoundValue) => {
   // wrong size
   if (hand.length < 3) return false
   const { pureHand, numberOfWilds } = filterWildcards(hand, currentRoundValue)
@@ -116,10 +122,10 @@ export const checkBook = (hand, currentRoundValue) => {
   return false
 }
 
-export const checkRun = (hand, currentRoundValue) => {
+const checkRun = (hand, currentRoundValue) => {
   if (hand.length < 3) return false
   const { pureHand, numberOfWilds } = filterWildcards(hand, currentRoundValue)
-  // If there is only one pure hand in your hand you have all other wilds.
+  // If there is only one pure card in your hand you have all other wilds.
   if (pureHand.length <= 1) return true
 
   // Two card have the same face value
@@ -132,7 +138,7 @@ export const checkRun = (hand, currentRoundValue) => {
   // With cards sorts and all unique the amount of missing cards
   // is less than or equal to the number of wilds.
   if (
-    getNumberOfMissingCards(pureHand.map((x) => getCardInt(x))).sort() <=
+    getNumberOfMissingCards(pureHand.map((x) => getCardInt(x)).sort()) <=
     numberOfWilds
   )
     return true
@@ -140,26 +146,113 @@ export const checkRun = (hand, currentRoundValue) => {
   return false
 }
 
-export const generatePossibleCombinations = (hand, currentRoundValue) => {
-  const wildsAndJokers = hand.filter(x => isWild(x, currentRoundValue))
-  const kings = hand.filter(x => x.value === "K").sort((a, b) => getCardTotalValue(a) - getCardTotalValue(b))
-  const jokers = hand.filter(x => x.value === 10).sort((a, b) => getCardTotalValue(a) - getCardTotalValue(b))
-  const jacksAndQueens = hand.filter(x => x.value === "Q" || x.value === "J").sort((a, b) => getCardTotalValue(a) - getCardTotalValue(b))
-  const others = hand.filter(x => {
-    return x.value !== "K" ||
-      x.value !== "Q" ||
-      x.value !== "J" ||
-      x.value !== 10 ||
-      x.value !== currentRoundValue
-  }).sort((a, b) => getCardTotalValue(a) - getCardTotalValue(b))
-  const sortedHand = [...others, ...jokers, ...kings]
+const generatePossibleCombinations = (hand, currentRoundValue) => {
+  const wildsAndJokers = hand.filter((x) => isWild(x, currentRoundValue))
+  const sortedHand = hand
+    .sort((a, b) => getCardTotalValue(a) - getCardTotalValue(b))
+    .filter((x) => !isWild(x, currentRoundValue))
 
-  const maxNumber = sortedHand - wildsAndJokers.length
-  const minNumber = 3 - (wildsAndJokers.length > 2 ? 3 : wildsAndJokers.length)
+  let maxNumber = sortedHand.length - wildsAndJokers.length
+  let minNumber = 3 - (wildsAndJokers.length > 2 ? 3 : wildsAndJokers.length)
+  let numCardCurrCombo = minNumber
 
-  for (i = minNumber; i <= maxNumber; i++) {
-    for (y = 0; y <= maxNumber - i; y++) {
-      
+  let combinations = []
+  while (numCardCurrCombo <= maxNumber) {
+    let startIndexcurrCombo = 0
+    while (startIndexcurrCombo <= maxNumber - numCardCurrCombo) {
+      let currCombo = []
+      for (
+        let i = startIndexcurrCombo;
+        i < numCardCurrCombo + startIndexcurrCombo;
+        i++
+      ) {
+        if (i < sortedHand.length) {
+          currCombo = [...currCombo, sortedHand[i]]
+        }
+        combinations = [...combinations, currCombo]
+      }
+      startIndexcurrCombo++
+    }
+    numCardCurrCombo++
+  }
+
+  const suits = Array.from(new Set(cards.map((x) => x.suit)))
+
+  maxNumber = sortedHand.length
+  numCardCurrCombo = minNumber
+  suits.forEach((suit) => {
+    const currSuitCards = sortedHand.filter((x) => x.suit === suit)
+
+    while (numCardCurrCombo <= maxNumber) {
+      let startIndexcurrCombo = 0
+      while (startIndexcurrCombo <= maxNumber - numCardCurrCombo) {
+        let currCombo = []
+        for (
+          let i = startIndexcurrCombo;
+          i < numCardCurrCombo + startIndexcurrCombo;
+          i++
+        ) {
+          if (i < currSuitCards.length) {
+            currCombo = [...currCombo, currSuitCards[i]]
+          }
+        }
+        if (
+          !combinations.some(
+            (x) => JSON.stringify(x) === JSON.stringify(currCombo)
+          )
+        ) {
+          combinations = [...combinations, currCombo]
+        }
+        startIndexcurrCombo++
+      }
+      numCardCurrCombo++
+    }
+  })
+
+  return listBooksAndRuns(combinations.map((x) => [...x, ...wildsAndJokers]))
+}
+
+const listBooksAndRuns = (combos) => {
+  return combos.filter((x) => checkBook(x) || checkRun(x))
+}
+
+export const bestBookRunCombination = (hand, currRoundValue) => {
+  let recursiveBookRunHands = []
+  let handScore = hand.reduce((acc, curr) => acc + getCardScore(curr), 0)
+  let bestHand = []
+
+  const recurse = (newHand) => {
+    const allPossibleCombos = generatePossibleCombinations(newHand, currRoundValue)
+    console.log(`combos`, JSON.stringify(allPossibleCombos))
+    console.log(JSON.stringify(hand))
+    if (allPossibleCombos.length === 0) {
+      console.log("DONE")
+      const currScore = newHand.reduce(
+        (acc, curr) => acc + getCardScore(curr),
+        0
+      )
+      if (currScore <= handScore) {
+        recursiveBookRunHands = [newHand]
+        if (currScore < handScore) {
+          bestHand = newHand
+        }
+        handScore = currScore
+      }
+      console.log(handScore)
+      return handScore
+    }
+    for(const combo of allPossibleCombos) {
+
+      const handAfterRemoval = newHand.filter((card) =>
+        !combo.some((x) => {
+          return areCardsEqual(x, card)
+        })
+      )
+      console.log({handAfterRemoval: JSON.stringify(handAfterRemoval)})
+      recurse(handAfterRemoval)
     }
   }
+
+  const score = recurse(hand)
+  return { score, bestHand }
 }
