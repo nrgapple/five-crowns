@@ -1,0 +1,14 @@
+.tableContainer {
+  display: grid;
+  grid-template-columns: 1fr auto auto 1fr;
+  grid-gap: 32px 32px;
+  align-items: center;
+}
+
+.deckContainer {
+  grid-column: 2;
+}
+
+.discardedContainer {
+  grid-column: 3;
+}

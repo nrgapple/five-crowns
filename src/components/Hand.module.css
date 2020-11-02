@@ -1,0 +1,15 @@
+.handContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 32px;
+  align-items: center;
+}
+
+.handCard {
+  box-shadow: -2px 0px 4px -2px black;
+}
+
+.selected {
+  align-self: flex-end;
+}

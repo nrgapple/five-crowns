@@ -1,0 +1,1 @@
+export const areCardsEqual = (a, b) => (a.value === b.value && a.suit === b.suit)

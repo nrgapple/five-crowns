@@ -1,10 +1,6 @@
 export default [
   {
     "suit": "hearts",
-    "value": 2
-  },
-  {
-    "suit": "hearts",
     "value": 3
   },
   {
@@ -50,10 +46,6 @@ export default [
   {
     "suit": "hearts",
     "value": "X"
-  },
-  {
-    "suit": "diamonds",
-    "value": 2
   },
   {
     "suit": "diamonds",
@@ -105,10 +97,6 @@ export default [
   },
   {
     "suit": "clubs",
-    "value": 2
-  },
-  {
-    "suit": "clubs",
     "value": 3
   },
   {
@@ -157,10 +145,6 @@ export default [
   },
   {
     "suit": "spades",
-    "value": 2
-  },
-  {
-    "suit": "spades",
     "value": 3
   },
   {
@@ -206,10 +190,6 @@ export default [
   {
     "suit": "spades",
     "value": "X"
-  },
-  {
-    "suit": "star",
-    "value": 2
   },
   {
     "suit": "star",

@@ -1,8 +1,44 @@
 .cardContainer {
-  grid-template-columns: 20% 1fr 20%;
-  grid-template-rows: 10% 10% 1fr 10% 10%;
-  box-shadow: -8 1;
+  grid-template-columns: 33% 1fr 33%;
+  grid-template-rows: 20% 20% 1fr 20% 20%;
+  border: 1px solid black;
+  border-radius: 7%;
+  background-color: white;
   display: grid;
+  width: 60px;
+  height: 100px;
+  text-align: center;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.cardContainerFaceDown {
+  border: 1px solid black;
+  border-radius: 7px;
+  background-color: lightcyan;
+  width: 60px;
+  height: 100px;
+}
+
+.cardContainerFaceDown:hover {
+  box-shadow: -2px 0px 4px -2px black;
+}
+
+.cardContainerFaceDown:active {
+  box-shadow: -2px 0px 5px -2px black;
+}
+
+.cardContainer:hover {
+  box-shadow: -2px 0px 4px -2px black;
+}
+
+.cardContainer:active {
+  box-shadow: -2px 0px 5px -2px black;
 }
 
 .valueTop {
@@ -10,5 +46,13 @@
 }
 
 .suitTop {
-  grid-area: 2 / 1 / 1 / 1;
+  grid-area: 2 / 1 / 2 / 1;
+}
+
+.valueBottom {
+  grid-area: 4 / 3 / 5 / 4;
+}
+
+.suitBottom {
+  grid-area: 5 / 3 / 6 / 4;
 }
