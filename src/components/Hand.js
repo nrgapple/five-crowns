@@ -14,7 +14,7 @@ export default ({ cards }) => {
           <div
             key={i}
             style={{
-              marginTop: activeCard === i ? -16 : 0,
+              marginTop: activeCard === i ? -32 : -8,
               marginRight: -8,
             }}
             onClick={(e) => {
