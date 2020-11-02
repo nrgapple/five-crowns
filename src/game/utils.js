@@ -241,8 +241,9 @@ export const bestBookRunCombination = (hand, currRoundValue) => {
       console.log(handScore)
       return handScore
     }
+    console.log(`allPossibleCombos`, JSON.stringify(allPossibleCombos));
     for(const combo of allPossibleCombos) {
-
+      console.log(combo)
       const handAfterRemoval = newHand.filter((card) =>
         !combo.some((x) => {
           return areCardsEqual(x, card)
@@ -251,6 +252,7 @@ export const bestBookRunCombination = (hand, currRoundValue) => {
       console.log({handAfterRemoval: JSON.stringify(handAfterRemoval)})
       recurse(handAfterRemoval)
     }
+    console.log("down here?")
   }
 
   const score = recurse(hand)

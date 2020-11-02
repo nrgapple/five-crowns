@@ -1,5 +1,19 @@
 import React from "react"
+import styles from "./Board.module.css"
+import Card from "./Card"
 
-export default (props) => {
-  return <h1>Lets go</h1>
+export default ({ ctx, G, moves, ...props }) => {
+  return (
+    <div className={styles.boardContainer}>
+      <div />
+      <div className={styles.deckContainer}>
+        <Card />
+      </div>
+      <div />
+      <div className={styles.discardedCardsContainer}>
+        <Card />
+      </div>
+      <div />
+    </div>
+  )
 }

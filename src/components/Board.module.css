@@ -1,0 +1,13 @@
+.boardContainer {
+ grid-template-columns: 40% 1fr 1fr 1fr 40%;
+ display: grid;
+ height: 30%;
+}
+
+.deckContainer {
+  grid-column-start: 2;
+}
+
+.discardedCardsContainer {
+  grid-column-start: 4;
+}

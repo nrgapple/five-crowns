@@ -1,0 +1,14 @@
+.cardContainer {
+  grid-template-columns: 20% 1fr 20%;
+  grid-template-rows: 10% 10% 1fr 10% 10%;
+  box-shadow: -8 1;
+  display: grid;
+}
+
+.valueTop {
+  grid-area: 1 / 1 / 1 / 1;
+}
+
+.suitTop {
+  grid-area: 2 / 1 / 1 / 1;
+}
